@@ -18,7 +18,7 @@ async fn main() -> Result<()> {
         configuration.application.host, configuration.application.port
     );
     let connection_pool = PgPoolOptions::new()
-        .acquire_timeout(std::time::Duration::from_secs(2))
+        .acquire_timeout(std::time::Duration::from_secs(15))
         .connect_lazy_with(configuration.database.with_db());
     let listener = TcpListener::bind(address).expect("Failed to bind random port");
     run(listener, connection_pool)?.await
