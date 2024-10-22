@@ -27,6 +27,8 @@ tracing-subscriber = { version = "0.3.16", features = [
 tracing-bunyan-formatter = "0.3.9"
 tracing-log = "0.2.0"
 tracing-actix-web = "0.7.14"
+serde-aux = "4.5.0"
+log = "0.4"
 
 [dependencies.sqlx]
 version = "0.8.2"
