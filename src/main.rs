@@ -19,7 +19,9 @@ async fn main() -> Result<()> {
     );
     let connection_pool = PgPoolOptions::new()
         .acquire_timeout(std::time::Duration::from_secs(15))
-        .connect_lazy_with(configuration.database.with_db());
+        .connect_with(configuration.database.with_db())
+        .await
+        .expect("Failed to allocate pool");
     let listener = TcpListener::bind(address).expect("Failed to bind random port");
     run(listener, connection_pool)?.await
 }
