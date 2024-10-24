@@ -7,3 +7,5 @@ database:
   username: "postgres"
   password: "password"
   database_name: "newsletter"
+email:
+  key: re_fUQxytis_GR117csWzQrVJzZfmPcpimZa

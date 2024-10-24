@@ -53,7 +53,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
 
     let response = client
-        .post(&format!("{}/subscribe", &app.address))
+        .post(&format!("{}/subscribtions", &app.address))
         .header("Content-type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
@@ -82,7 +82,7 @@ async fn subsribe_returns_a_400_when_data_is_missing() {
 
     for (body, error_message) in test_cases {
         let response = client
-            .post(&format!("{}/subscribe", &app.address))
+            .post(&format!("{}/subscribtions", &app.address))
             .header("Content-type", "application/x-www-form-urlencoded")
             .body(body)
             .send()
@@ -94,6 +94,35 @@ async fn subsribe_returns_a_400_when_data_is_missing() {
             response.status().as_u16(),
             "The API did not fail with 400 bad request when the payload was {}.",
             error_message
+        );
+    }
+}
+
+#[actix_web::test]
+async fn subscribe_returns_a_400_when_fields_are_present_but_empty() {
+    // Arrange
+    let app = spawn_app().await;
+    let client = reqwest::Client::new();
+    let test_cases = vec![
+        ("name=&email=ursula_le_guin%40gmail.com", "empty name"),
+        ("name=Ursula&email=", "empty email"),
+        ("name=Ursula&email=definitely-not-an-email", "invalid email"),
+    ];
+    for (body, description) in test_cases {
+        // Act
+        let response = client
+            .post(&format!("{}/subscribtions", &app.address))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(body)
+            .send()
+            .await
+            .expect("Failed to execute request.");
+        // Assert
+        assert_eq!(
+            400,
+            response.status().as_u16(),
+            "The API did not return a 400 Bad Request when the payload was {}.",
+            description
         );
     }
 }
